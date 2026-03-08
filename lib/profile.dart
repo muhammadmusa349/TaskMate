@@ -1,54 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:taskmate/UIhelper.dart';
+import 'package:taskmate/firebase_provider.dart';
 import 'package:taskmate/login.dart';
 
-class Profile extends StatefulWidget {
+class Profile extends StatelessWidget {
   const Profile({super.key});
 
-  @override
-  State<Profile> createState() => _ProfileState();
-}
-
-class _ProfileState extends State<Profile> {
-
-  User? user = FirebaseAuth.instance.currentUser;
-  // bool isdarktheme = false;
-
-  @override
+   @override
   Widget build(BuildContext context) {
     return Scaffold(
        appBar: AppBar(
         backgroundColor: Colors.blue.shade400,
         title: Text("Profile", style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),),
         centerTitle: true,
-//         actions: [
-//   PopupMenuButton(
-//     itemBuilder: (context) => [
-//       PopupMenuItem(
-//         child: StatefulBuilder(
-//           builder: (context, setPopupState) {
-//             return SwitchListTile.adaptive(
-//               title: const Text("Dark theme"),
-//               subtitle: const Text("Enable dark theme"),
-//               activeThumbColor: Colors.blue,
-//               contentPadding: EdgeInsets.zero,
-//               value: isdarktheme,
-//               onChanged: (value) {
-//                 setPopupState(() {
-//                   isdarktheme = value;
-//                 });
-
-//                 setState(() {}); // update main screen also
-//               },
-//             );
-//           },
-//         ),
-//       ),
-//     ],
-//   )
-// ],
       ),
 
       body: Container(
@@ -64,31 +30,29 @@ class _ProfileState extends State<Profile> {
               child: Image.asset("assets/images/person.jpg", fit: BoxFit.fill),
             ),
 
-            StreamBuilder(stream: FirebaseFirestore.instance.collection("Users").doc(user!.uid).snapshots(),
-             builder: (context, snapshot) {
-              if(snapshot.connectionState == ConnectionState.active){
-                if(snapshot.hasData){
-                  return Column(
-                    children: [
-                      // ignore: prefer_interpolation_to_compose_strings
-                      Text("Welcome " + snapshot.data!["Name"], style: TextStyle(fontSize: 20, fontWeight: FontWeight.w400),),
-                      Container(height: 10,),
-                      Text(snapshot.data!["Email"],style: TextStyle(fontSize: 20, fontWeight: FontWeight.w300),),
-                    ],
-                  );
-                }
-                else if(snapshot.hasError){
-                  return Text(snapshot.error.toString());
-                }
-                else{
-                  return Text("No data found");
-                }
-              }
-              else{
-                return CircularProgressIndicator();
-              }
-             },
-             ),
+Consumer<FirebaseProvider>(
+  builder: (context, value, child) {
+    if (value.isLoading) {
+      return const CircularProgressIndicator();
+    }
+
+    if (value.name == null) {
+      return const Text("No data found");
+    }
+
+    return Column(
+      children: [
+        Text(
+          "Welcome ${value.name}",
+          style: const TextStyle(fontSize: 20),
+        ),
+        Text(value.email ?? ""),
+      ],
+    );
+  },
+),
+
+
 
              SizedBox(height: 30,),
 
