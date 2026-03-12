@@ -5,7 +5,7 @@ import 'package:taskmate/firebase_provider.dart';
 import 'package:taskmate/splashscreen.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsFlutterBinding.ensureInitialized(); 
   await Firebase.initializeApp();
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => FirebaseProvider(),),

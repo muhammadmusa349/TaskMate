@@ -37,7 +37,7 @@ dependencies:
   firebase_core: ^4.4.0
   firebase_auth: ^6.1.4
   cloud_firestore: ^6.1.2
-  flutter_native_splash: ^2.4.0
+  flutter_native_splash: ^2.4.7
   provider: ^6.1.5+1
 
 dev_dependencies:
@@ -50,6 +50,22 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+
+flutter_native_splash:
+  android: true
+  ios: true
+  # Use the blue color from your widget (Colors.blue.shade400)
+  color: "#42A5F5" 
+  image: assets/images/splash.jpeg
+  
+  # Android 12+ specific settings (Critical for removing Flutter logo)
+  android_12:
+    color: "#42A5F5"
+    image: assets/images/splash.jpeg
+    # This prevents the default launcher icon from being used as a fallback
+    icon_background_color: "#42A5F5" 
+
+  fullscreen: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -91,8 +107,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
-flutter_native_splash:
-  color: "#FFFFFF"
-  image: assets/images/splash.jpeg
-  android: true
-  ios: true
+
