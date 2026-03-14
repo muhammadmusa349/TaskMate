@@ -18,7 +18,7 @@ class _SplashscreenState extends State<Splashscreen>{
 @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 1), () {
+    Timer(Duration(milliseconds: 50), () {
       checkuser();
     },);
   }
@@ -39,16 +39,9 @@ class _SplashscreenState extends State<Splashscreen>{
        body: Container(
         width: double.infinity,
         height: double.infinity,
-        color: Colors.blue.shade400,
+        color: Colors.white,
         child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.calendar_month, size: 160, color: Colors.white,),
-              SizedBox(height: 10,),
-              Text("TaskMate", style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),),
-            ],
-          ),
+          child: Image.asset("assets/images/appicon.png", height: 60, width: 60, fit: BoxFit.fill,),
         ),
        ),
 
