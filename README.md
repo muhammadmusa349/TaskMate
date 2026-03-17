@@ -27,27 +27,4 @@ TaskMate is built with a focus on seamless user experience, responsive design, a
 
 ---
 
-## 📱 Visual Previews
-
-<p align="center">
-  <img src="path/to/login_dark_screenshot.png" alt="Login Screen" width="220" />
-  <img src="path/to/home_light_screenshot.png" alt="Home Screen" width="220" /> 
-  <img src="path/to/profile_stats_screenshot.png" alt="Profile Dashboard" width="220" />
-</p>
-
----
-
-## 🚀 Getting Started
-
-Follow these steps to run the project locally on your machine.
-
-### Prerequisites
-* [Flutter SDK](https://docs.flutter.dev/get-started/install) installed
-* An IDE (VS Code, Android Studio, etc.)
-* A Firebase account
-
-### Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone [https://github.com/muhammadmusa349/TaskMate.git](https://github.com/muhammadmusa349/TaskMate.git)
+## Developed with ❤️ by Muhammad Musa.
