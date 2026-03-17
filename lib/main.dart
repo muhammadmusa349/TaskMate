@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart'; // <-- Re-added Provider package
-import 'package:taskmate/firebase_provider.dart'; // <-- Re-added your FirebaseProvider
+import 'package:provider/provider.dart'; 
+import 'package:taskmate/firebase_provider.dart';
 import 'package:taskmate/home.dart';
 import 'package:taskmate/login.dart';
 

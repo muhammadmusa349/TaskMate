@@ -48,24 +48,29 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = Theme.of(context).colorScheme.onSurface;
+    final labelColor = isDark ? Colors.grey.shade300 : Colors.grey.shade800;
+    final subtitleColor = isDark ? Colors.grey.shade400 : Colors.grey.shade600;
+    final dividerColor = isDark ? Colors.grey.shade800 : Colors.grey.shade300;
+
     return Scaffold(
-      backgroundColor: Colors.white, // Clean white background
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(), // Premium scrolling
+          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 40),
-                // --- HERO HEADER ---
-                const Text(
+                Text(
                   "Welcome Back! 👋",
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: textColor,
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -73,23 +78,17 @@ class _LoginState extends State<Login> {
                   "We're so happy to see you again. You can continue where you left off by logging in.",
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey.shade600,
+                    color: subtitleColor,
                     height: 1.5,
                   ),
                 ),
                 const SizedBox(height: 50),
 
-                // --- INPUT FIELDS ---
                 Text(
                   "Email Address",
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade800),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: labelColor),
                 ),
                 const SizedBox(height: 8),
-                
-                // NEW EMAIL FIELD
                 CustomTextField(
                   controller: emailcontroller,
                   hintText: "Enter your email",
@@ -101,14 +100,9 @@ class _LoginState extends State<Login> {
                 
                 Text(
                   "Password",
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade800),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: labelColor),
                 ),
                 const SizedBox(height: 8),
-                
-                // NEW PASSWORD FIELD (Will automatically show the eye toggle!)
                 CustomTextField(
                   controller: passwordcontroller,
                   hintText: "Enter your password",
@@ -116,12 +110,10 @@ class _LoginState extends State<Login> {
                   prefixIcon: Icons.lock_outline_rounded,
                 ),
                 
-                // --- FORGOT PASSWORD ---
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {
-                      // Navigate to the new Forgot Password screen
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -134,69 +126,45 @@ class _LoginState extends State<Login> {
                     ),
                     child: Text(
                       "Forgot Password?",
-                      style: TextStyle(
-                          color: Colors.blue.shade600,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
+                      style: TextStyle(color: Colors.blue.shade500, fontSize: 14, fontWeight: FontWeight.w600),
                     ),
                   ),
                 ),
                 
                 const SizedBox(height: 20),
 
-                // --- LOGIN BUTTON ---
                 isLoading
-                    ? Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.blue.shade600,
-                        ),
-                      )
+                    ? Center(child: CircularProgressIndicator(color: Colors.blue.shade600))
                     : UIhelper.custombutton(() {
-                        login(emailcontroller.text.toString(),
-                            passwordcontroller.text.toString());
+                        login(emailcontroller.text.toString(), passwordcontroller.text.toString());
                       }, "Login"),
 
                 const SizedBox(height: 40),
 
-                // --- MODERN DIVIDER ---
                 Row(
                   children: [
-                    Expanded(child: Divider(color: Colors.grey.shade300, thickness: 1)),
+                    Expanded(child: Divider(color: dividerColor, thickness: 1)),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        "OR",
-                        style: TextStyle(color: Colors.grey.shade500, fontWeight: FontWeight.bold),
-                      ),
+                      child: Text("OR", style: TextStyle(color: subtitleColor, fontWeight: FontWeight.bold)),
                     ),
-                    Expanded(child: Divider(color: Colors.grey.shade300, thickness: 1)),
+                    Expanded(child: Divider(color: dividerColor, thickness: 1)),
                   ],
                 ),
 
                 const SizedBox(height: 30),
 
-                // --- SIGN UP LINK ---
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "Don't have an account?",
-                      style: TextStyle(fontSize: 15, color: Colors.grey.shade700),
-                    ),
+                    Text("Don't have an account?", style: TextStyle(fontSize: 15, color: subtitleColor)),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const SignupScreen(),
-                            ));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const SignupScreen()));
                       },
                       child: Text(
                         "Sign up",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.blue.shade600,
-                            fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 16, color: Colors.blue.shade500, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],

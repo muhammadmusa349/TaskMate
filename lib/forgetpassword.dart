@@ -18,40 +18,23 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       return UIhelper.customalertbox(context, "Please enter your email address.");
     } else {
       try {
-        setState(() {
-          isLoading = true;
-        });
-
-        // Firebase built-in method to send reset email
+        setState(() => isLoading = true);
         await FirebaseAuth.instance.sendPasswordResetEmail(email: email.trim());
-
-        setState(() {
-          isLoading = false;
-        });
+        setState(() => isLoading = false);
 
         if (mounted) {
-          // Show a modern success message at the bottom of the screen
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: const Text(
-                "Password reset link sent! Check your email.",
-                style: TextStyle(fontSize: 16),
-              ),
+              content: const Text("Password reset link sent! Check your email.", style: TextStyle(fontSize: 16)),
               backgroundColor: Colors.green.shade600,
               behavior: SnackBarBehavior.floating,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
           );
-          
-          // Send the user back to the login screen automatically
           Navigator.pop(context);
         }
       } on FirebaseAuthException catch (e) {
-        setState(() {
-          isLoading = false;
-        });
+        setState(() => isLoading = false);
         return UIhelper.customalertbox(context, e.message ?? "An error occurred");
       }
     }
@@ -59,8 +42,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = Theme.of(context).colorScheme.onSurface;
+    final labelColor = isDark ? Colors.grey.shade300 : Colors.grey.shade800;
+    final subtitleColor = isDark ? Colors.grey.shade400 : Colors.grey.shade600;
+    final backBtnBg = isDark ? Colors.grey.shade800 : Colors.grey.shade100;
+    final backBtnIcon = isDark ? Colors.white : Colors.grey.shade800;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
@@ -69,72 +59,30 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                
-                // --- CUSTOM BACK BUTTON ---
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.arrow_back_ios_new_rounded, 
-                      color: Colors.grey.shade800, size: 20),
+                    decoration: BoxDecoration(color: backBtnBg, shape: BoxShape.circle),
+                    child: Icon(Icons.arrow_back_ios_new_rounded, color: backBtnIcon, size: 20),
                   ),
                 ),
                 
                 const SizedBox(height: 30),
-
-                // --- HERO HEADER ---
-                const Text(
-                  "Reset Password 🔒",
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
+                Text("Reset Password 🔒", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: textColor)),
                 const SizedBox(height: 10),
-                Text(
-                  "Don't worry! It happens. Please enter the email address associated with your account and we'll send you a link to reset your password.",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey.shade600,
-                    height: 1.5,
-                  ),
-                ),
+                Text("Don't worry! It happens. Please enter the email address associated with your account and we'll send you a link to reset your password.", style: TextStyle(fontSize: 16, color: subtitleColor, height: 1.5)),
                 const SizedBox(height: 40),
 
-                // --- INPUT FIELD ---
-                Text(
-                  "Email Address",
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade800),
-                ),
+                Text("Email Address", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: labelColor)),
                 const SizedBox(height: 8),
-                CustomTextField(
-                  controller: emailcontroller,
-                  hintText: "Enter your registered email",
-                  isPassword: false,
-                  prefixIcon: Icons.mail_outline_rounded,
-                ),
+                CustomTextField(controller: emailcontroller, hintText: "Enter your registered email", isPassword: false, prefixIcon: Icons.mail_outline_rounded),
                 
                 const SizedBox(height: 40),
 
-                // --- RESET BUTTON ---
                 isLoading
-                    ? Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.blue.shade600,
-                        ),
-                      )
-                    : UIhelper.custombutton(() {
-                        resetPassword(emailcontroller.text.toString());
-                      }, "Send Reset Link"),
-
+                    ? Center(child: CircularProgressIndicator(color: Colors.blue.shade600))
+                    : UIhelper.custombutton(() => resetPassword(emailcontroller.text.toString()), "Send Reset Link"),
               ],
             ),
           ),

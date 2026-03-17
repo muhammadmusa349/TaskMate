@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class UIhelper {
-  // Upgraded to a sleek, modern button
   static Widget custombutton(VoidCallback onPressed, String text) {
     return SizedBox(
       width: double.infinity,
@@ -26,13 +25,13 @@ class UIhelper {
     );
   }
 
-  // Upgraded to a softer, more modern dialog
   static Future customalertbox(BuildContext context, String text) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          backgroundColor: Colors.white,
+          backgroundColor: isDark ? Colors.grey.shade900 : Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
@@ -43,13 +42,14 @@ class UIhelper {
               Text(
                 "Alert",
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, color: Colors.blue.shade600),
+                    fontWeight: FontWeight.bold, color: Colors.blue.shade500),
               ),
             ],
           ),
           content: Text(
             text,
-            style: const TextStyle(fontSize: 15, color: Colors.black87),
+            style: TextStyle(
+                fontSize: 15, color: isDark ? Colors.white : Colors.black87),
           ),
           actions: [
             TextButton(
@@ -61,7 +61,7 @@ class UIhelper {
                 style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue.shade600),
+                    color: Colors.blue.shade500),
               ),
             ),
           ],
@@ -71,7 +71,6 @@ class UIhelper {
   }
 }
 
-// NEW: A Stateful Custom TextField to handle password visibility toggles natively!
 class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
@@ -96,39 +95,38 @@ class _CustomTextFieldState extends State<CustomTextField> {
   @override
   void initState() {
     super.initState();
-    // If it's a password field, hide it by default. Otherwise, show text.
     isHidden = widget.isPassword;
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
     return TextField(
       controller: widget.controller,
       obscureText: isHidden,
+      style: TextStyle(color: isDark ? Colors.white : Colors.black87),
       decoration: InputDecoration(
         hintText: widget.hintText,
-        hintStyle: TextStyle(color: Colors.grey.shade500),
+        hintStyle: TextStyle(color: isDark ? Colors.grey.shade500 : Colors.grey.shade500),
         filled: true,
-        fillColor: Colors.grey.shade100,
-        prefixIcon: Icon(widget.prefixIcon, color: Colors.grey.shade600),
-        
-        // This adds the "Eye" toggle button ONLY if it's a password field
+        fillColor: isDark ? Colors.grey.shade800 : Colors.grey.shade100,
+        prefixIcon: Icon(widget.prefixIcon, color: isDark ? Colors.grey.shade400 : Colors.grey.shade600),
         suffixIcon: widget.isPassword
             ? IconButton(
                 icon: Icon(
                   isHidden
                       ? Icons.visibility_off_outlined
                       : Icons.visibility_outlined,
-                  color: Colors.grey.shade600,
+                  color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
                 ),
                 onPressed: () {
                   setState(() {
-                    isHidden = !isHidden; // Toggle visibility state
+                    isHidden = !isHidden;
                   });
                 },
               )
             : null,
-            
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,

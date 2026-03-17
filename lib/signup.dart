@@ -22,37 +22,24 @@ class _SignupScreenState extends State<SignupScreen> {
       return UIhelper.customalertbox(context, "Please enter all required fields.");
     } else {
       try {
-        setState(() {
-          isLoading = true;
-        });
+        setState(() => isLoading = true);
 
         UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: email.trim(), password: password.trim());
+            .createUserWithEmailAndPassword(email: email.trim(), password: password.trim());
                 
-        await FirebaseFirestore.instance
-            .collection("Users")
-            .doc(userCredential.user!.uid)
-            .set({
+        await FirebaseFirestore.instance.collection("Users").doc(userCredential.user!.uid).set({
           "Name": name.trim(),
           "Email": email.trim(),
           "UID": userCredential.user!.uid
         });
 
-        setState(() {
-          isLoading = false;
-        });
+        setState(() => isLoading = false);
 
         if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const Login()),
-          );
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login()));
         }
       } on FirebaseAuthException catch (e) {
-        setState(() {
-          isLoading = false;
-        });
+        setState(() => isLoading = false);
         return UIhelper.customalertbox(context, e.message ?? "Signup failed");
       }
     }
@@ -60,166 +47,81 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = Theme.of(context).colorScheme.onSurface;
+    final labelColor = isDark ? Colors.grey.shade300 : Colors.grey.shade800;
+    final subtitleColor = isDark ? Colors.grey.shade400 : Colors.grey.shade600;
+    final dividerColor = isDark ? Colors.grey.shade800 : Colors.grey.shade300;
+    final backBtnBg = isDark ? Colors.grey.shade800 : Colors.grey.shade100;
+    final backBtnIcon = isDark ? Colors.white : Colors.grey.shade800;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(), // Premium smooth scrolling
+          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                
-                // --- CUSTOM BACK BUTTON ---
                 GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(Icons.arrow_back_ios_new_rounded, 
-                      color: Colors.grey.shade800, size: 20),
+                    decoration: BoxDecoration(color: backBtnBg, shape: BoxShape.circle),
+                    child: Icon(Icons.arrow_back_ios_new_rounded, color: backBtnIcon, size: 20),
                   ),
                 ),
                 
                 const SizedBox(height: 30),
-
-                // --- HERO HEADER ---
-                const Text(
-                  "Create Account ✨",
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
+                Text("Create Account ✨", style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: textColor)),
                 const SizedBox(height: 10),
-                Text(
-                  "Join TaskMate today and start organizing your tasks beautifully.",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey.shade600,
-                    height: 1.5,
-                  ),
-                ),
+                Text("Join TaskMate today and start organizing your tasks beautifully.", style: TextStyle(fontSize: 16, color: subtitleColor, height: 1.5)),
                 const SizedBox(height: 40),
 
-                // --- INPUT FIELDS ---
-                Text(
-                  "Full Name",
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade800),
-                ),
+                Text("Full Name", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: labelColor)),
                 const SizedBox(height: 8),
-                CustomTextField(
-                  controller: namecontroller,
-                  hintText: "Enter your name",
-                  isPassword: false,
-                  prefixIcon: Icons.person_outline_rounded,
-                ),
+                CustomTextField(controller: namecontroller, hintText: "Enter your name", isPassword: false, prefixIcon: Icons.person_outline_rounded),
                 
                 const SizedBox(height: 20),
-
-                Text(
-                  "Email Address",
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade800),
-                ),
+                Text("Email Address", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: labelColor)),
                 const SizedBox(height: 8),
-                CustomTextField(
-                  controller: emailcontroller,
-                  hintText: "Enter your email",
-                  isPassword: false,
-                  prefixIcon: Icons.mail_outline_rounded,
-                ),
+                CustomTextField(controller: emailcontroller, hintText: "Enter your email", isPassword: false, prefixIcon: Icons.mail_outline_rounded),
                 
                 const SizedBox(height: 20),
-
-                Text(
-                  "Password",
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey.shade800),
-                ),
+                Text("Password", style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: labelColor)),
                 const SizedBox(height: 8),
-                CustomTextField(
-                  controller: passwordcontroller,
-                  hintText: "Create a password",
-                  isPassword: true, // This automatically turns on the "Eye" toggle!
-                  prefixIcon: Icons.lock_outline_rounded,
-                ),
+                CustomTextField(controller: passwordcontroller, hintText: "Create a password", isPassword: true, prefixIcon: Icons.lock_outline_rounded),
                 
                 const SizedBox(height: 40),
 
-                // --- SIGNUP BUTTON ---
                 isLoading
-                    ? Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.blue.shade600,
-                        ),
-                      )
-                    : UIhelper.custombutton(() {
-                        signup(
-                          namecontroller.text.toString(),
-                          emailcontroller.text.toString(),
-                          passwordcontroller.text.toString(),
-                        );
-                      }, "Sign Up"),
+                    ? Center(child: CircularProgressIndicator(color: Colors.blue.shade600))
+                    : UIhelper.custombutton(() => signup(namecontroller.text.toString(), emailcontroller.text.toString(), passwordcontroller.text.toString()), "Sign Up"),
 
                 const SizedBox(height: 40),
 
-                // --- MODERN DIVIDER ---
                 Row(
                   children: [
-                    Expanded(child: Divider(color: Colors.grey.shade300, thickness: 1)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        "OR",
-                        style: TextStyle(color: Colors.grey.shade500, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    Expanded(child: Divider(color: Colors.grey.shade300, thickness: 1)),
+                    Expanded(child: Divider(color: dividerColor, thickness: 1)),
+                    Padding(padding: const EdgeInsets.symmetric(horizontal: 16), child: Text("OR", style: TextStyle(color: subtitleColor, fontWeight: FontWeight.bold))),
+                    Expanded(child: Divider(color: dividerColor, thickness: 1)),
                   ],
                 ),
 
                 const SizedBox(height: 30),
-
-                // --- LOGIN LINK ---
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "Already have an account?",
-                      style: TextStyle(fontSize: 15, color: Colors.grey.shade700),
-                    ),
+                    Text("Already have an account?", style: TextStyle(fontSize: 15, color: subtitleColor)),
                     TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Login(),
-                            ));
-                      },
-                      child: Text(
-                        "Login",
-                        style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.blue.shade600,
-                            fontWeight: FontWeight.bold),
-                      ),
+                      onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Login())),
+                      child: Text("Login", style: TextStyle(fontSize: 16, color: Colors.blue.shade500, fontWeight: FontWeight.bold)),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20), // Bottom padding for scroll room
+                const SizedBox(height: 20),
               ],
             ),
           ),
